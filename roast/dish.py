@@ -38,6 +38,8 @@ class Dish:
             # binary constraints on inness
             model += self.is_in[time] >= 0
             model += self.is_in[time] <= 1
+            model += self.put_in[time] + self.is_in[time - self.system_config.time_increment] <= 1
+            model += self.is_in[time - self.system_config.time_increment] - self.take_out[time] >= 0
 
         # cooking time constraint -- total cooking time == desired cooking time
         # TODO: add some tolerance here, maybe user-defined
@@ -59,8 +61,13 @@ class Dish:
     def get_results(self) -> pd.DataFrame:
         is_in = pd.Series({time: self.is_in[time].value() for time in
                            range(0, self.system_config.total_time, self.system_config.time_increment)})
+        put_in = pd.Series({time: self.put_in[time].value() for time in
+                            range(0, self.system_config.total_time, self.system_config.time_increment)})
+        take_out = pd.Series({time: self.take_out[time].value() for time in
+                              range(0, self.system_config.total_time, self.system_config.time_increment)})
         time_cooked = pd.Series({time: self.time_cooked[time].value() for time in
                                  range(0, self.system_config.total_time, self.system_config.time_increment)})
         space_used = pd.Series({time: self.space_used[time].value() for time in
                                 range(0, self.system_config.total_time, self.system_config.time_increment)})
-        return pd.DataFrame({"is_in": is_in, "time_cooked": time_cooked, "space_used": space_used})
+        return pd.DataFrame({"is_in": is_in, "put_in": put_in, "take_out": take_out,
+                             "time_cooked": time_cooked, "space_used": space_used})

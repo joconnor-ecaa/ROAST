@@ -49,3 +49,18 @@ class Optimiser:
         results variables, e.g. the total oven space used at each timestep."""
         assert self._solved, "System has not been solved. Call Optimiser.solve() first."
         return sum(dish.get_results() for dish in self.dishes)
+
+    def print_instructions(self) -> None:
+        res = self.get_results()
+        put_in = pd.DataFrame({name: res[name]["put_in"] for name in res})
+        take_out = pd.DataFrame({name: res[name]["take_out"] for name in res})
+
+        for time in put_in.index:
+            items_going_in = put_in.loc[time][put_in.loc[time] == 1].index
+            items_coming_out = take_out.loc[time][take_out.loc[time] == 1].index
+            if items_going_in.empty and items_coming_out.empty:
+                continue
+            action_string = f"{time} minutes: "
+            action_string += " ".join([f"Take out the {item}." for item in items_coming_out] +
+                                      [f"Put in the {item}." for item in items_going_in])
+            print(action_string)
