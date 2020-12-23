@@ -1,11 +1,12 @@
 import pandas as pd
 import pulp
 
-from .config import SystemConfig, DishConfig
+from . import config
 
 
 class Dish:
-    def __init__(self, model: pulp.LpProblem, system_config: SystemConfig, dish_config: DishConfig) -> None:
+    def __init__(self, model: pulp.LpProblem, system_config: config.SystemConfig,
+                 dish_config: config.DishConfig) -> None:
         self.name = dish_config.name
         self.size = dish_config.size
         self.serve_hot = dish_config.serve_hot_weight
@@ -19,7 +20,7 @@ class Dish:
         self.space_used = {-self.system_config.time_increment: 0}
         self.time_cooked = {-self.system_config.time_increment: 0}
 
-        for time in range(0, self.system_config.total_time, self.system_config.time_increment):
+        for time in config.get_time_range(self.system_config):
             # decision variables -- put into oven at this timestep
             self.put_in[time] = pulp.LpVariable("{}_in_{}".format(self.name, time), cat="Binary")
             # take out of oven at this timestep
@@ -43,8 +44,8 @@ class Dish:
 
         # cooking time constraint -- total cooking time == desired cooking time
         # TODO: add some tolerance here, maybe user-defined
-        model += self.time_cooked[
-                     self.system_config.total_time - self.system_config.time_increment] == self.oven_mins
+        model += self.time_cooked[self.system_config.total_time] == self.oven_mins
+        model += self.is_in[self.system_config.total_time] == 0
 
     def get_score(self) -> pulp.LpAffineExpression:
         # reward hot food
@@ -60,14 +61,14 @@ class Dish:
 
     def get_results(self) -> pd.DataFrame:
         is_in = pd.Series({time: self.is_in[time].value() for time in
-                           range(0, self.system_config.total_time, self.system_config.time_increment)})
+                           config.get_time_range(self.system_config)})
         put_in = pd.Series({time: self.put_in[time].value() for time in
-                            range(0, self.system_config.total_time, self.system_config.time_increment)})
+                            config.get_time_range(self.system_config)})
         take_out = pd.Series({time: self.take_out[time].value() for time in
-                              range(0, self.system_config.total_time, self.system_config.time_increment)})
+                              config.get_time_range(self.system_config)})
         time_cooked = pd.Series({time: self.time_cooked[time].value() for time in
-                                 range(0, self.system_config.total_time, self.system_config.time_increment)})
+                                 config.get_time_range(self.system_config)})
         space_used = pd.Series({time: self.space_used[time].value() for time in
-                                range(0, self.system_config.total_time, self.system_config.time_increment)})
+                                config.get_time_range(self.system_config)})
         return pd.DataFrame({"is_in": is_in, "put_in": put_in, "take_out": take_out,
                              "time_cooked": time_cooked, "space_used": space_used})

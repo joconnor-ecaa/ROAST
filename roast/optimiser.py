@@ -8,22 +8,23 @@ from typing import List, Dict
 import pandas as pd
 import pulp
 
-from .config import SystemConfig, DishConfig
+from . import config
 from .dish import Dish
 
 
-def get_dishes(model: pulp.LpProblem, dish_config_list: List[DishConfig], system_config: SystemConfig) -> List[Dish]:
+def get_dishes(model: pulp.LpProblem, dish_config_list: List[config.DishConfig], system_config: config.SystemConfig) -> \
+        List[Dish]:
     return [Dish(model, system_config=system_config, dish_config=dish_config) for dish_config in dish_config_list]
 
 
 class Optimiser:
-    def __init__(self, system_config: SystemConfig, dish_config_list: List[DishConfig]) -> None:
+    def __init__(self, system_config: config.SystemConfig, dish_config_list: List[config.DishConfig]) -> None:
         self.model = pulp.LpProblem("ROAST", pulp.LpMaximize)
         self._solved = False
 
         self.dishes = get_dishes(self.model, dish_config_list, system_config)
 
-        for time in range(0, system_config.total_time, system_config.time_increment):
+        for time in config.get_time_range(system_config):
             space_used = sum(dish.space_used[time] for dish in self.dishes)
             # total oven space constraint
             self.model += space_used <= system_config.num_oven_shelves
