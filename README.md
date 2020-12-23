@@ -18,7 +18,7 @@ jupyter notebook
 
 # Usage
 
-For now, just use or clone the notebook [Christmas Dinner.ipynb](examples/Christmas Dinner.ipynb).
+For now, just use or clone the notebook `examples/Christmas Dinner.ipynb`.
 
 - Specify your problem through DishConfig and SystemConfig -- cooking
 times, oven space, etc.
