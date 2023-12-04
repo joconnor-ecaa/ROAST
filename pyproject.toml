@@ -16,7 +16,7 @@ classifiers = [
 Changelog = "https://github.com/joconnor-ecaa/roastmaster/releases"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 click = ">=8.0.1"
 pulp = ">=2.0.0"
 pandas = ">=1.0.0"
