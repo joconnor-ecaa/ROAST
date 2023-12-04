@@ -75,18 +75,20 @@ class Optimiser:
         """Solves the model.
 
         Raises:
-            SolverError: If model solving fails.  # noqa: DAR402
+            SolverError: If model solving fails.
         """
         # model.solve() returns 1 if solver succeeds, -1 otherwise.
         self._solved = self.model.solve() == 1
-        self.check_solved()
+        try:
+            self.check_solved()
+        except SolverError:
+            raise SolverError("Model solving failed.") from None
 
     def check_solved(self):
         """Raises an exception if the model has not been solved."""
         if not self._solved:
             raise SolverError(
-                "System has not been solved. Either solving failed or"
-                " Optimiser.solve() has not been called."
+                "System has not been solved. Make sure Optimiser.solve() has been called."
             )
 
     def get_results(self) -> dict[str, pd.DataFrame]:
