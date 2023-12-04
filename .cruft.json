@@ -1,0 +1,21 @@
+{
+  "template": "https://github.com/cjolowicz/cookiecutter-hypermodern-python.git",
+  "commit": "af0fd99e72e3afac2dc2b20406b1bee689260be1",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "roastmaster",
+      "package_name": "roastmaster",
+      "friendly_name": "Roastmaster",
+      "author": "Joe O'Connor",
+      "email": "joseph.m.oconnor.88@gmail.com",
+      "github_user": "joconnor-ecaa",
+      "version": "0.0.0",
+      "copyright_year": "2023",
+      "license": "MIT",
+      "development_status": "Development Status :: 2 - Pre-Alpha",
+      "_template": "https://github.com/cjolowicz/cookiecutter-hypermodern-python.git"
+    }
+  },
+  "directory": null
+}

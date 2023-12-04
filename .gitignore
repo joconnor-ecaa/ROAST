@@ -1,2 +1,10 @@
-/examples/.ipynb_checkpoints/
-/venv/
+.mypy_cache/
+/.coverage
+/.coverage.*
+/.nox/
+/.python-version
+/.pytype/
+/dist/
+/docs/_build/
+/src/*.egg-info/
+__pycache__/
