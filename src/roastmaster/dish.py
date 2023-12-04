@@ -39,10 +39,6 @@ class Dish:
             model (pulp.LpProblem): The optimization model.
             system_config (config.SystemConfig): The system configuration.
             dish_config (config.DishConfig): The dish configuration.
-
-        Returns:
-            None
-
         """
         self.name = dish_config.name
         self.size = dish_config.size

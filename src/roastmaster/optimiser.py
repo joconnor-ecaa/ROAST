@@ -75,7 +75,7 @@ class Optimiser:
         """Solves the model.
 
         Raises:
-            SolverError: If model solving fails.
+            SolverError: If model solving fails.  # noqa: DAR402
         """
         # model.solve() returns 1 if solver succeeds, -1 otherwise.
         self._solved = self.model.solve() == 1
