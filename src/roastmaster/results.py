@@ -30,12 +30,13 @@ class Results:
         """
         return sum((df for dish, df in self.dish_results.items()), pd.DataFrame())
 
-    def print_instructions(self) -> None:
-        """Prints instructions for cooking the dishes based on the optimiser results."""
+    def get_instructions(self) -> None:
+        """Returns printable instructions based on the optimiser results."""
         res = self.dish_results
         put_in = pd.DataFrame({name: res[name]["put_in"] for name in res})
         take_out = pd.DataFrame({name: res[name]["take_out"] for name in res})
 
+        output = ""
         for time in put_in.index:
             items_going_in = put_in.loc[time][put_in.loc[time] == 1].index
             items_coming_out = take_out.loc[time][take_out.loc[time] == 1].index
@@ -46,15 +47,13 @@ class Results:
                 [f"Take out the {item}." for item in items_coming_out]
                 + [f"Put in the {item}." for item in items_going_in]
             )
-            print(action_string)
-        print("Take everything out and serve.")
-        print(
-            random.choice(  # nosec
-                [
-                    "Enjoy!",
-                    "Bon appetit!",
-                    "Yum!",
-                    "Enjoy your meal!",
-                ]
-            )
+            output += action_string + "\n"
+        output += random.choice(  # nosec
+            [
+                "Enjoy!",
+                "Bon appetit!",
+                "Yum!",
+                "Enjoy your meal!",
+            ]
         )
+        return output
