@@ -30,7 +30,7 @@ class Results:
         """
         return sum((df for dish, df in self.dish_results.items()), pd.DataFrame())
 
-    def get_instructions(self) -> None:
+    def get_instructions(self) -> str:
         """Returns printable instructions based on the optimiser results."""
         res = self.dish_results
         put_in = pd.DataFrame({name: res[name]["put_in"] for name in res})
