@@ -55,6 +55,10 @@ matplotlib = "^3.8.2"
 [tool.poetry.scripts]
 roastmaster = "roastmaster.__main__:main"
 
+[tool.poetry.group.app.dependencies]
+fastapi = "^0.104.1"
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
+
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
 tests = ["tests", "*/tests"]

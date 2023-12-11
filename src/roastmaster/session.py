@@ -74,7 +74,7 @@ class Session:
         total cooking time and the amount of space it is using.
 
         Returns:
-            dict[str, pd.DataFrame]: The per-dish results dataframes.
+            Results: object holding recipe instructions and per-dish results timeseries.
 
         """
         self.check_solved()
