@@ -2,8 +2,11 @@
 from functools import cache
 
 from fastapi import FastAPI
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 from roastmaster import Session
+from roastmaster import SolverError
 from roastmaster.models import Dish
 from roastmaster.models import System
 
@@ -25,6 +28,23 @@ def get_results(system, dishes):
     sesh = Session(system, dishes)
     sesh.solve()
     return sesh.get_results()
+
+
+@app.exception_handler(SolverError)
+async def solver_exception_handler(request: Request, exc: SolverError):
+    """Exception handler for solver errors.
+
+    Args:
+        request (Request): The incoming request object.
+        exc (SolverError): The solver error that occurred.
+
+    Returns:
+        JSONResponse: A JSON response with a status code of 400 and an error message.
+    """
+    return JSONResponse(
+        status_code=400,
+        content={"message": f"Solver error: {exc}"},
+    )
 
 
 @app.get("/")
